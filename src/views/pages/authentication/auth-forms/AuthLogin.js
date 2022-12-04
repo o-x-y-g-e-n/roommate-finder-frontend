@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import {Navigate, Route } from 'react-router-dom';
+import axios from 'axios';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -24,7 +26,7 @@ import {
 // third party
 import * as Yup from 'yup';
 import { Formik } from 'formik';
-
+import {useNavigate} from 'react-router-dom';
 // project imports
 import useScriptRef from 'hooks/useScriptRef';
 import AnimateButton from 'ui-component/extended/AnimateButton';
@@ -42,13 +44,55 @@ const FirebaseLogin = ({ ...others }) => {
     const scriptedRef = useScriptRef();
     const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
     const customization = useSelector((state) => state.customization);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [user, setUser] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [checked, setChecked] = useState(true);
-
+    const navigate = useNavigate();
+    useEffect(() => {
+        const loggedInUser = localStorage.getItem('user');
+        if (loggedInUser) {
+          const foundUser = loggedInUser;
+          setUser(foundUser);
+        }
+      }, []);
+    
+      const handleLogout = () => {
+        setUser({});
+        setEmail('');
+        setPassword('');
+        localStorage.clear();
+      };
+    
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        const user = { email: email, password: password };
+    
+        const response = await axios({
+          url: '/api/login',
+          method: 'post',
+          data: user,
+        });
+    
+        console.log(response.data);
+    
+        if (response.data.token == 1234) {
+          setUser(response.data);
+          console.log(user);
+          localStorage.setItem('user', JSON.stringify(response.data));
+        } else {
+          toast.error('Invalid username or password');
+        }
+      };
+      if (user) {
+        navigate("/");
+      }
     const googleHandler = async () => {
         console.error('Login');
     };
 
-    const [showPassword, setShowPassword] = useState(false);
+   
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
     };
@@ -120,8 +164,8 @@ const FirebaseLogin = ({ ...others }) => {
 
             <Formik
                 initialValues={{
-                    email: 'info@homie2go.com',
-                    password: '123456',
+                    email: '',
+                    password: '',
                     submit: null
                 }}
                 validationSchema={Yup.object().shape({
@@ -144,25 +188,21 @@ const FirebaseLogin = ({ ...others }) => {
                     }
                 }}
             >
-                {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
-                    <form noValidate onSubmit={handleSubmit} {...others}>
+                {({ errors, handleBlur, handleChange , isSubmitting, touched, values }) => (
+                    <form noValidate {...others}>
                         <FormControl fullWidth error={Boolean(touched.email && errors.email)} sx={{ ...theme.typography.customInput }}>
                             <InputLabel htmlFor="outlined-adornment-email-login">Email Address / Username</InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-email-login"
                                 type="email"
-                                value={values.email}
+                                value={email}
+                                onChange={(event) => {setEmail(event.target.value)}}
                                 name="email"
                                 onBlur={handleBlur}
-                                onChange={handleChange}
                                 label="Email Address / Username"
                                 inputProps={{}}
                             />
-                            {touched.email && errors.email && (
-                                <FormHelperText error id="standard-weight-helper-text-email-login">
-                                    {errors.email}
-                                </FormHelperText>
-                            )}
+
                         </FormControl>
 
                         <FormControl
@@ -174,10 +214,10 @@ const FirebaseLogin = ({ ...others }) => {
                             <OutlinedInput
                                 id="outlined-adornment-password-login"
                                 type={showPassword ? 'text' : 'password'}
-                                value={values.password}
+                                value={password}
                                 name="password"
                                 onBlur={handleBlur}
-                                onChange={handleChange}
+                                onChange={(event) => {setPassword(event.target.value)}}
                                 endAdornment={
                                     <InputAdornment position="end">
                                         <IconButton
@@ -232,6 +272,7 @@ const FirebaseLogin = ({ ...others }) => {
                                     type="submit"
                                     variant="contained"
                                     color="secondary"
+                                    onClick={handleSubmit}
                                 >
                                     Sign in
                                 </Button>

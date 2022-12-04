@@ -1,9 +1,9 @@
+import React, {useState} from 'react';
 import { Link } from 'react-router-dom';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import { Divider, Grid, Stack, Typography, useMediaQuery } from '@mui/material';
-
 // project imports
 import AuthWrapper1 from '../AuthWrapper1';
 import AuthCardWrapper from '../AuthCardWrapper';
@@ -17,8 +17,7 @@ import AuthFooter from 'ui-component/cards/AuthFooter';
 
 const Register = () => {
     const theme = useTheme();
-    const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
-
+    const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));    
     return (
         <AuthWrapper1>
             <Grid container direction="column" justifyContent="flex-end" sx={{ minHeight: '100vh' }}>

@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import {Navigate } from 'react-router-dom';
+import axios from 'axios';
+import {useNavigate} from 'react-router-dom';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -45,10 +48,61 @@ const FirebaseRegister = ({ ...others }) => {
     const customization = useSelector((state) => state.customization);
     const [showPassword, setShowPassword] = useState(false);
     const [checked, setChecked] = useState(true);
+    const navigate = useNavigate();
 
     const [strength, setStrength] = useState(0);
     const [level, setLevel] = useState();
+    const [email, setEmail] = useState('');
+    const [firstName, setfirstName] = useState('');
+    const [lastName, setlastName] = useState('');
+    const [password, setPassword] = useState('');
+    const [user, setUser] = useState('');
+    const [landlord, setLandlord] = useState(false);
 
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        console.log(`
+          firstName: ${firstName}
+          lastName: ${lastName}
+          Email: ${email}
+          Password: ${password}
+          Landlord: ${landlord}
+        `);
+    
+        const payload = {
+          firstName: firstName.charAt(0).toUpperCase() + firstName.slice(1),
+          lastName: lastName,
+          Email: email,
+          Password: password,
+          Landlord: landlord,
+          rentPaid: false,
+        };
+    
+        const response = await axios({
+          url: '/api/register',
+          method: 'post',
+          data: payload,
+        });
+    
+        console.log(response);
+    
+        if (response.data.token == 1234) {
+          console.log(response.data.token);
+          setUser(response.data);
+          localStorage.setItem('user', JSON.stringify(payload));
+          if (landlord === true) {
+            handleLogout();
+          }
+          navigate('/login');
+
+          console.log('redirect');
+        } else if (response.data.token == 4321) {
+          console.log(response.data.token);
+          toast.error('Oops, that email already exists!');
+        }
+      };
+
+    
     const googleHandler = async () => {
         console.error('Register');
     };
@@ -61,16 +115,13 @@ const FirebaseRegister = ({ ...others }) => {
         event.preventDefault();
     };
 
+   
+    
     const changePassword = (value) => {
         const temp = strengthIndicator(value);
         setStrength(temp);
         setLevel(strengthColor(temp));
     };
-
-    useEffect(() => {
-        changePassword('123456');
-    }, []);
-
     return (
         <>
             <Grid container direction="column" justifyContent="center" spacing={2}>
@@ -150,8 +201,8 @@ const FirebaseRegister = ({ ...others }) => {
                     }
                 }}
             >
-                {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
-                    <form noValidate onSubmit={handleSubmit} {...others}>
+                {({ errors, handleBlur, handleChange, isSubmitting, touched, values }) => (
+                    <form noValidate   {...others}>
                         <Grid container spacing={matchDownSM ? 0 : 2}>
                             <Grid item xs={12} sm={6}>
                                 <TextField
@@ -161,6 +212,7 @@ const FirebaseRegister = ({ ...others }) => {
                                     name="fname"
                                     type="text"
                                     defaultValue=""
+                                    onChange={(event) => {setfirstName(event.target.value)}}
                                     sx={{ ...theme.typography.customInput }}
                                 />
                             </Grid>
@@ -171,27 +223,23 @@ const FirebaseRegister = ({ ...others }) => {
                                     margin="normal"
                                     name="lname"
                                     type="text"
+                                    onChange={(event) => {setlastName(event.target.value)}}
                                     defaultValue=""
                                     sx={{ ...theme.typography.customInput }}
                                 />
                             </Grid>
                         </Grid>
-                        <FormControl fullWidth error={Boolean(touched.email && errors.email)} sx={{ ...theme.typography.customInput }}>
+                        <FormControl fullWidth  sx={{ ...theme.typography.customInput }}>
                             <InputLabel htmlFor="outlined-adornment-email-register">Email Address / Username</InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-email-register"
                                 type="email"
-                                value={values.email}
+                                value={email}
                                 name="email"
                                 onBlur={handleBlur}
-                                onChange={handleChange}
+                                onChange={(event) => {setEmail(event.target.value)}}
                                 inputProps={{}}
                             />
-                            {touched.email && errors.email && (
-                                <FormHelperText error id="standard-weight-helper-text--register">
-                                    {errors.email}
-                                </FormHelperText>
-                            )}
                         </FormControl>
 
                         <FormControl
@@ -208,6 +256,7 @@ const FirebaseRegister = ({ ...others }) => {
                                 label="Password"
                                 onBlur={handleBlur}
                                 onChange={(e) => {
+                                    setPassword(e.target.value)
                                     handleChange(e);
                                     changePassword(e.target.value);
                                 }}
@@ -258,18 +307,15 @@ const FirebaseRegister = ({ ...others }) => {
                                 <FormControlLabel
                                     control={
                                         <Checkbox
-                                            checked={checked}
-                                            onChange={(event) => setChecked(event.target.checked)}
+                                            checked={landlord}
+                                            onChange={(event) => setLandlord(event.target.checked)}
                                             name="checked"
                                             color="primary"
                                         />
                                     }
                                     label={
                                         <Typography variant="subtitle1">
-                                            Agree with &nbsp;
-                                            <Typography variant="subtitle1" component={Link} to="#">
-                                                Terms & Condition.
-                                            </Typography>
+                                            Are you a landlord?
                                         </Typography>
                                     }
                                 />
@@ -286,11 +332,13 @@ const FirebaseRegister = ({ ...others }) => {
                                 <Button
                                     disableElevation
                                     disabled={isSubmitting}
+                                    
                                     fullWidth
                                     size="large"
                                     type="submit"
                                     variant="contained"
                                     color="secondary"
+                                    onClick={handleSubmit}
                                 >
                                     Sign up
                                 </Button>
