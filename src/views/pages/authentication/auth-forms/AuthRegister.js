@@ -79,7 +79,7 @@ const FirebaseRegister = ({ ...others }) => {
         };
     
         const response = await axios({
-          url: '/api/register',
+          url: `${process.env.AWS_URL}/api/register`,
           method: 'post',
           data: payload,
         });
