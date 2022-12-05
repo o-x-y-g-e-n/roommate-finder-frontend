@@ -26,7 +26,8 @@ const MainRoutes = {
         {
             path: 'roommates',
             element: <RoommatesPage />
-        }
+        },
+        
     ]
 };
 
