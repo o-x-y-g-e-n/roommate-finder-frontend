@@ -22,6 +22,17 @@ import DialogTitle from "@mui/material/DialogTitle";
 import EducationCard from "./EducationCard";
 import WorkExperienceCard from './WorkExperienceCard';
 export default function AddressForm() {
+
+  const [pFirstName, setPFirstName] = React.useState();
+  const [pLastName, setPLastName] = React.useState();
+  const [addr1, setAddr1] = React.useState();
+  const [addr2, setAddr2] = React.useState();
+  const [city, setCity] = React.useState();
+  const [state, setState] = React.useState();
+  const [zipcode, setZipcode] = React.useState();
+  const [country, setCountry] = React.useState();
+  const [relegion, setRelegion] = React.useState();
+
   const [MartialStatus, setMS] = React.useState();
   const [DOB, setDOB] = React.useState();
   const [gender, setGender] = React.useState();
@@ -33,6 +44,9 @@ export default function AddressForm() {
   const [edulocation, setEduLocation] = React.useState();
   const [eduDegree, setEduDegree] = React.useState();
   const [eduMajor, setEduMajor] = React.useState();
+  const [fbURL, setFBURL] = React.useState();
+  const [linkedinURL, setLinkedinURL] = React.useState();
+  const [twitterURL, setTwitterURL] = React.useState();
 
   // work experience dialog states
   const [companyName, setCompanyName] = React.useState();
@@ -41,7 +55,7 @@ export default function AddressForm() {
   const [endDate, setEndDate] = React.useState();
 
   const [location, setLocation] = React.useState();
-
+  
   const handleMSChange = (event) => {
     setMS(event.target.value);
   };
@@ -76,6 +90,7 @@ export default function AddressForm() {
             required
             id="firstName"
             name="firstName"
+            onChange={event => {setPFirstName(event.target.value)}}
             label="Preferred First name"
             fullWidth
             autoComplete="given-name"
@@ -87,6 +102,7 @@ export default function AddressForm() {
             required
             id="lastName"
             name="lastName"
+            onChange={event => {setPLastName(event.target.value)}}
             label="Preferred Last name"
             fullWidth
             autoComplete="family-name"
@@ -99,6 +115,7 @@ export default function AddressForm() {
             id="address1"
             name="address1"
             label="Address line 1"
+            onChange={event => {setAddr1(event.target.value)}}
             fullWidth
             autoComplete="shipping address-line1"
             variant="standard"
@@ -108,6 +125,7 @@ export default function AddressForm() {
           <TextField
             id="address2"
             name="address2"
+            onChange={event => {setAddr2(event.target.value)}}
             label="Address line 2"
             fullWidth
             autoComplete="shipping address-line2"
@@ -120,6 +138,7 @@ export default function AddressForm() {
             id="city"
             name="city"
             label="City"
+            onChange={event => {setCity(event.target.value)}}
             fullWidth
             autoComplete="shipping address-level2"
             variant="standard"
@@ -131,6 +150,7 @@ export default function AddressForm() {
             name="state"
             label="State/Province/Region"
             fullWidth
+            onChange={event => {setState(event.target.value)}}
             variant="standard"
           />
         </Grid>
@@ -170,7 +190,7 @@ export default function AddressForm() {
         <Grid item xs={12} sm={6}>
           <FormControl sx={{ m: 1, minWidth: "95%" }}>
             <InputLabel id="demo-controlled-open-select-label">
-              Martial Status
+              Marital status
             </InputLabel>
             <Select
               labelId="demo-controlled-open-select-label"
@@ -179,9 +199,10 @@ export default function AddressForm() {
               label="Martial Status"
               onChange={handleMSChange}
             >
-              <MenuItem value={10}>Hindu</MenuItem>
-              <MenuItem value={20}>Muslim</MenuItem>
-              <MenuItem value={30}>Crtistian</MenuItem>
+              <MenuItem value={"Single"}>Single</MenuItem>
+              <MenuItem value={"Married"}>Married</MenuItem>
+              <MenuItem value={"Seperated"}>Seperated</MenuItem>
+              <MenuItem value={"Divorced"}>Divorced</MenuItem>
             </Select>
           </FormControl>
         </Grid>
@@ -220,6 +241,7 @@ export default function AddressForm() {
             id="fbURL"
             name="fbURL"
             label="Facebook Profile URL"
+            onChange={(event) => {setFBURL(event.target.value)}}
             fullWidth
             variant="standard"
           />
@@ -230,6 +252,7 @@ export default function AddressForm() {
             name="linkedinURL"
             label="LinkedIn Profile URL"
             fullWidth
+            onChange={(event) => {setLinkedinURL(event.target.value)}}
             variant="standard"
           />
           </Grid>
@@ -239,6 +262,7 @@ export default function AddressForm() {
             name="twitterURL"
             label="Twitter Profile URL"
             fullWidth
+            onChange={(event) => {setTwitterURL(event.target.value)}}
             variant="standard"
           />
           </Grid>
@@ -261,7 +285,7 @@ export default function AddressForm() {
                 </DialogContentText>
                 <Grid item xs={12}>
                   <TextField
-                    autoFocus
+                    
                     margin="dense"
                     id="name"
                     onChange={(event) => setUniversityName(event.target.value)}
@@ -274,7 +298,7 @@ export default function AddressForm() {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    autoFocus
+                    
                     margin="dense"
                     id="name"
                     onChange={(event) => setEduDegree(event.target.value)}
@@ -287,7 +311,7 @@ export default function AddressForm() {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    autoFocus
+                    
                     margin="dense"
                     id="name"
                     onChange={(event) => setUniversityName(event.target.value)}
@@ -300,7 +324,7 @@ export default function AddressForm() {
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    autoFocus
+                    
                     margin="dense"
                     id="name"
                     onChange={(event) => setUniversityName(event.target.value)}
@@ -354,7 +378,7 @@ export default function AddressForm() {
               </DialogContentText>
               <Grid item xs={12}>
                 <TextField
-                  autoFocus
+                  
                   margin="dense"
                   id="name"
                   onChange={(event) => setUniversityName(event.target.value)}
@@ -367,7 +391,7 @@ export default function AddressForm() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  autoFocus
+                  
                   margin="dense"
                   id="name"
                   onChange={(event) => setEduDegree(event.target.value)}
@@ -406,7 +430,7 @@ export default function AddressForm() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  autoFocus
+                  
                   margin="dense"
                   id="name"
                   onChange={(event) => setLocation(event.target.value)}

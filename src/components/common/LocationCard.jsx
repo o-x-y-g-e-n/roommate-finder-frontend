@@ -12,7 +12,7 @@ export default function LocationCard({location}) {
         <CardMedia
           component="img"
           height="140"
-          image="https://picsum.photos/500/500"
+          image="/dummy-image.jpg"
           alt="green iguana"
         />
         <CardContent>

@@ -64,7 +64,6 @@ export default function Review() {
           </DialogContentText>
           <Grid item xs={12}>
             <TextField
-              autoFocus
               margin="dense"
               id="name"
               onChange={(event) => setUniversityName(event.target.value)}
@@ -77,7 +76,7 @@ export default function Review() {
           </Grid>
           <Grid item xs={12}>
             <TextField
-              autoFocus
+              
               margin="dense"
               id="name"
               onChange={(event) => setEduDegree(event.target.value)}
@@ -90,7 +89,7 @@ export default function Review() {
           </Grid>
           <Grid item xs={12}>
             <TextField
-              autoFocus
+              
               margin="dense"
               id="name"
               onChange={(event) => setUniversityName(event.target.value)}
@@ -103,7 +102,7 @@ export default function Review() {
           </Grid>
           <Grid item xs={12}>
             <TextField
-              autoFocus
+              
               margin="dense"
               id="name"
               onChange={(event) => setUniversityName(event.target.value)}

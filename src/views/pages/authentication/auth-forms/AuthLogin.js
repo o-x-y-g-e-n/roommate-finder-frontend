@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import {Navigate, Route } from 'react-router-dom';
+import { Navigate, Route } from 'react-router-dom';
 import axios from 'axios';
 
 // material-ui
@@ -26,7 +26,7 @@ import {
 // third party
 import * as Yup from 'yup';
 import { Formik } from 'formik';
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // project imports
 import useScriptRef from 'hooks/useScriptRef';
 import AnimateButton from 'ui-component/extended/AnimateButton';
@@ -46,53 +46,76 @@ const FirebaseLogin = ({ ...others }) => {
     const customization = useSelector((state) => state.customization);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isLandlord, setLandlord] = useState(false);
     const [user, setUser] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [checked, setChecked] = useState(true);
+
     const navigate = useNavigate();
     useEffect(() => {
         const loggedInUser = localStorage.getItem('user');
         if (loggedInUser) {
-          const foundUser = loggedInUser;
-          setUser(foundUser);
+            const foundUser = loggedInUser;
+            setUser(foundUser);
+            setLandlord(true);
         }
-      }, []);
-    
-      const handleLogout = () => {
+    }, [user, isLandlord]);
+
+    const handleLogout = () => {
         setUser({});
         setEmail('');
         setPassword('');
         localStorage.clear();
-      };
-    
-      const handleSubmit = async (e) => {
+    };
+
+    const handleForgotPassword = async (e) => {
+        e.preventDefault();
+        const response = await axios({
+            url: `/api/resetPassword`,
+            method: 'get'
+        });
+        console.log(response.data);
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const user = { email: email, password: password };
-    
+
         const response = await axios({
-          url: `${process.env.REACT_APP_AWS_URL}/api/login`,
-          method: 'post',
-          data: user,
+            url: `/api/login`,
+            method: 'post',
+            data: user
         });
-    
+
         console.log(response.data);
-    
+
         if (response.data.token == 1234) {
-          setUser(response.data);
-          console.log(user);
-          localStorage.setItem('user', JSON.stringify(response.data));
+            setUser(response.data);
+            console.log(user);
+            localStorage.setItem('user', JSON.stringify(response.data));
         } else {
-          toast.error('Invalid username or password');
+            toast.error('Invalid username or password');
         }
-      };
-      if (user) {
-        navigate("/");
-      }
+        let isLandlord1 = false;
+        try {
+            isLandlord1 = response.data.landlord;
+        } catch (e) {
+            console.log(e);
+        }
+
+        if (user) {
+            if (isLandlord1) {
+                navigate('/landlord');
+            } else {
+                navigate('/');
+            }
+        }
+    };
+
     const googleHandler = async () => {
         console.error('Login');
     };
 
-   
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
     };
@@ -188,7 +211,7 @@ const FirebaseLogin = ({ ...others }) => {
                     }
                 }}
             >
-                {({ errors, handleBlur, handleChange , isSubmitting, touched, values }) => (
+                {({ errors, handleBlur, handleChange, isSubmitting, touched, values }) => (
                     <form noValidate {...others}>
                         <FormControl fullWidth error={Boolean(touched.email && errors.email)} sx={{ ...theme.typography.customInput }}>
                             <InputLabel htmlFor="outlined-adornment-email-login">Email Address / Username</InputLabel>
@@ -196,13 +219,14 @@ const FirebaseLogin = ({ ...others }) => {
                                 id="outlined-adornment-email-login"
                                 type="email"
                                 value={email}
-                                onChange={(event) => {setEmail(event.target.value)}}
+                                onChange={(event) => {
+                                    setEmail(event.target.value);
+                                }}
                                 name="email"
                                 onBlur={handleBlur}
                                 label="Email Address / Username"
                                 inputProps={{}}
                             />
-
                         </FormControl>
 
                         <FormControl
@@ -217,7 +241,9 @@ const FirebaseLogin = ({ ...others }) => {
                                 value={password}
                                 name="password"
                                 onBlur={handleBlur}
-                                onChange={(event) => {setPassword(event.target.value)}}
+                                onChange={(event) => {
+                                    setPassword(event.target.value);
+                                }}
                                 endAdornment={
                                     <InputAdornment position="end">
                                         <IconButton
@@ -252,7 +278,12 @@ const FirebaseLogin = ({ ...others }) => {
                                 }
                                 label="Remember me"
                             />
-                            <Typography variant="subtitle1" color="secondary" sx={{ textDecoration: 'none', cursor: 'pointer' }}>
+                            <Typography
+                                onClick={handleForgotPassword}
+                                variant="subtitle1"
+                                color="secondary"
+                                sx={{ textDecoration: 'none', cursor: 'pointer' }}
+                            >
                                 Forgot Password?
                             </Typography>
                         </Stack>

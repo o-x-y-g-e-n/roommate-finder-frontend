@@ -58,7 +58,12 @@ const FirebaseRegister = ({ ...others }) => {
     const [password, setPassword] = useState('');
     const [user, setUser] = useState('');
     const [landlord, setLandlord] = useState(false);
-
+    const handleLogout = () => {
+        setUser({});
+        setEmail('');
+        setPassword('');
+        localStorage.clear();
+      };
     const handleSubmit = async (event) => {
         event.preventDefault();
         console.log(`
@@ -79,7 +84,7 @@ const FirebaseRegister = ({ ...others }) => {
         };
     
         const response = await axios({
-            url: `${process.env.REACT_APP_AWS_URL}/api/register`,
+            url: `/api/register`,
           method: 'post',
           data: payload,
         });
@@ -98,7 +103,7 @@ const FirebaseRegister = ({ ...others }) => {
           console.log('redirect');
         } else if (response.data.token == 4321) {
           console.log(response.data.token);
-          toast.error('Oops, that email already exists!');
+          console.log('Oops, that email already exists!');
         }
       };
 
