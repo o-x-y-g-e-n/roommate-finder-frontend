@@ -82,7 +82,7 @@ const FirebaseLogin = ({ ...others }) => {
         const user = { email: email, password: password };
 
         const response = await axios({
-            url: `/api/login`,
+            url: `${process.env.REACT_APP_AWS_URL}/api/login`,
             method: 'post',
             data: user
         });
