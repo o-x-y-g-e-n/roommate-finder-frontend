@@ -88,6 +88,7 @@ const FirebaseRegister = ({ ...others }) => {
         //   method: 'post',
         //   data: payload,
         // });
+
     
         // console.log(response);
     
