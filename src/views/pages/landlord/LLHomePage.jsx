@@ -11,16 +11,17 @@ const LLHomePage = () => {
     const [user, setUser] = React.useState('');
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const loggedInUser = localStorage.getItem('user');
-        if (loggedInUser) {
-          const foundUser = loggedInUser;
-          setUser(foundUser);
-        }
-        else{
-            navigate('/signup')
-        }
-      }, []);
+    //TODO: fix this when backend is up and running
+    // useEffect(() => {
+    //     const loggedInUser = localStorage.getItem('user');
+    //     if (loggedInUser) {
+    //       const foundUser = loggedInUser;
+    //       setUser(foundUser);
+    //     }
+    //     else{
+    //         navigate('/signup')
+    //     }
+    //   }, []);
 
     return (
         <div>

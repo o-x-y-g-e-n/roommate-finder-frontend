@@ -83,28 +83,28 @@ const FirebaseRegister = ({ ...others }) => {
           rentPaid: false,
         };
     
-        const response = await axios({
-            url: `/api/register`,
-          method: 'post',
-          data: payload,
-        });
+        // const response = await axios({
+        //     url: `/api/register`,
+        //   method: 'post',
+        //   data: payload,
+        // });
     
-        console.log(response);
+        // console.log(response);
     
-        if (response.data.token == 1234) {
-          console.log(response.data.token);
-          setUser(response.data);
-          localStorage.setItem('user', JSON.stringify(payload));
-          if (landlord === true) {
-            handleLogout();
-          }
+        // if (response.data.token == 1234) {
+        //   console.log(response.data.token);
+        //   setUser(response.data);
+        //   localStorage.setItem('user', JSON.stringify(payload));
+        //   if (landlord === true) {
+        //     handleLogout();
+        //   }
           navigate('/login');
 
-          console.log('redirect');
-        } else if (response.data.token == 4321) {
-          console.log(response.data.token);
-          console.log('Oops, that email already exists!');
-        }
+        //   console.log('redirect');
+        // } else if (response.data.token == 4321) {
+        //   console.log(response.data.token);
+        //   console.log('Oops, that email already exists!');
+        // }
       };
 
     

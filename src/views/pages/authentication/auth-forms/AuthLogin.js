@@ -52,64 +52,61 @@ const FirebaseLogin = ({ ...others }) => {
     const [checked, setChecked] = useState(true);
 
     const navigate = useNavigate();
-    useEffect(() => {
-        const loggedInUser = localStorage.getItem('user');
-        if (loggedInUser) {
-            const foundUser = loggedInUser;
-            setUser(foundUser);
-            setLandlord(true);
-        }
-    }, [user, isLandlord]);
+    // useEffect(() => {
+    //     const loggedInUser = localStorage.getItem('user');
+    //     if (loggedInUser) {
+    //         const foundUser = loggedInUser;
+    //         setUser(foundUser);
+    //         setLandlord(true);
+    //     }
+    // }, [user, isLandlord]);
 
     const handleLogout = () => {
         setUser({});
         setEmail('');
         setPassword('');
         localStorage.clear();
+        navigate("/signup")
     };
 
     const handleForgotPassword = async (e) => {
-        e.preventDefault();
-        const response = await axios({
-            url: `/api/resetPassword`,
-            method: 'get'
-        });
-        console.log(response.data);
+        navigate("/signup")
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        // e.preventDefault();
         const user = { email: email, password: password };
+        // localStorage.setItem('user', JSON.stringify(response.data));
+        // const response = await axios({
+        //     url: `/api/login`,
+        //     method: 'post',
+        //     data: user
+        // });
 
-        const response = await axios({
-            url: `/api/login`,
-            method: 'post',
-            data: user
-        });
+        // console.log(response.data);
 
-        console.log(response.data);
+        // if (response.data.token == 1234) {
+        //     setUser(response.data);
+        //     console.log(user);
+        //     localStorage.setItem('user', JSON.stringify(response.data));
+        // } else {
+        //     toast.error('Invalid username or password');
+        // }
+        // let isLandlord1 = false;
+        // try {
+        //     isLandlord1 = response.data.landlord;
+        // } catch (e) {
+        //     console.log(e);
+        // }
 
-        if (response.data.token == 1234) {
-            setUser(response.data);
-            console.log(user);
-            localStorage.setItem('user', JSON.stringify(response.data));
-        } else {
-            toast.error('Invalid username or password');
-        }
-        let isLandlord1 = false;
-        try {
-            isLandlord1 = response.data.landlord;
-        } catch (e) {
-            console.log(e);
-        }
-
-        if (user) {
-            if (isLandlord1) {
-                navigate('/landlord');
-            } else {
-                navigate('/');
-            }
-        }
+        // if (user) {
+        //     if (isLandlord1) {
+        //         navigate('/landlord');
+        //     } else {
+        //         navigate('/');
+        //     }
+        // }
+        navigate('/');
     };
 
     const googleHandler = async () => {

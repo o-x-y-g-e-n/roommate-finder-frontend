@@ -12,16 +12,16 @@ const Homepage = () => {
     const [user, setUser] = React.useState('');
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const loggedInUser = localStorage.getItem('user');
-        if (loggedInUser) {
-          const foundUser = loggedInUser;
-          setUser(foundUser);
-        }
-        else{
-            navigate('/signup')
-        }
-      }, []);
+    // useEffect(() => {
+    //     const loggedInUser = localStorage.getItem('user');
+    //     if (loggedInUser) {
+    //       const foundUser = loggedInUser;
+    //       setUser(foundUser);
+    //     }
+    //     else{
+    //         navigate('/signup')
+    //     }
+    //   }, []);
 
     return (
         <div>
